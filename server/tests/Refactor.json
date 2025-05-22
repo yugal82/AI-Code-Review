@@ -1,0 +1,90 @@
+[
+{
+    "test_cases": [
+        {
+            "name": "Refactor Simple Code",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/refactor/{{valid_submission_id}}"
+            },
+            "expected_response": {
+                "status": 200,
+                "body": {
+                    "_id": "string",
+                    "submission": "string",
+                    "original": "string",
+                    "refactored": "string",
+                    "improvements": ["string"],
+                    "createdAt": "date"
+                }
+            }
+        },
+        {
+            "name": "Refactor Complex Code",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/refactor/{{complex_code_submission_id}}"
+            },
+            "expected_response": {
+                "status": 200,
+                "body": {
+                    "_id": "string",
+                    "submission": "string",
+                    "original": "string",
+                    "refactored": "string",
+                    "improvements": ["string"],
+                    "createdAt": "date"
+                }
+            }
+        },
+        {
+            "name": "Refactor Non-existent Submission",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/refactor/invalid_id"
+            },
+            "expected_response": {
+                "status": 404,
+                "body": {
+                    "message": "Submission not found"
+                }
+            }
+        }
+    ]
+},
+{
+    "test_cases": [
+        {
+            "name": "Get Existing Refactor",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/refactor/{{valid_submission_id}}"
+            },
+            "expected_response": {
+                "status": 200,
+                "body": {
+                    "_id": "string",
+                    "submission": "string",
+                    "original": "string",
+                    "refactored": "string",
+                    "improvements": ["string"],
+                    "createdAt": "date"
+                }
+            }
+        },
+        {
+            "name": "Get Non-existent Refactor",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/refactor/invalid_id"
+            },
+            "expected_response": {
+                "status": 404,
+                "body": {
+                    "message": "Refactor not found"
+                }
+            }
+        }
+    ]
+}
+]

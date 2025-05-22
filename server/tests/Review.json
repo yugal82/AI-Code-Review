@@ -1,0 +1,96 @@
+[
+{
+    "test_cases": [
+        {
+            "name": "Generate Review for Valid Code",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/review/{{valid_submission_id}}"
+            },
+            "expected_response": {
+                "status": 200,
+                "body": {
+                    "_id": "string",
+                    "submission": "string",
+                    "categories": {
+                        "style": ["string"],
+                        "performance": ["string"],
+                        "security": ["string"]
+                    },
+                    "createdAt": "date"
+                }
+            }
+        },
+        {
+            "name": "Generate Review for Non-existent Submission",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/review/invalid_id"
+            },
+            "expected_response": {
+                "status": 404,
+                "body": {
+                    "message": "Submission not found"
+                }
+            }
+        },
+        {
+            "name": "Generate Review for Complex Code",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/review/{{complex_code_submission_id}}"
+            },
+            "expected_response": {
+                "status": 200,
+                "body": {
+                    "_id": "string",
+                    "submission": "string",
+                    "categories": {
+                        "style": ["string"],
+                        "performance": ["string"],
+                        "security": ["string"]
+                    },
+                    "createdAt": "date"
+                }
+            }
+        }
+    ]
+},
+{
+    "test_cases": [
+        {
+            "name": "Get Existing Review",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/review/{{valid_submission_id}}"
+            },
+            "expected_response": {
+                "status": 200,
+                "body": {
+                    "_id": "string",
+                    "submission": "string",
+                    "categories": {
+                        "style": ["string"],
+                        "performance": ["string"],
+                        "security": ["string"]
+                    },
+                    "createdAt": "date"
+                }
+            }
+        },
+        {
+            "name": "Get Non-existent Review",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/review/invalid_id"
+            },
+            "expected_response": {
+                "status": 404,
+                "body": {
+                    "message": "Review not found"
+                }
+            }
+        }
+    ]
+}
+]

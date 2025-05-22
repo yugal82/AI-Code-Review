@@ -1,0 +1,93 @@
+[
+{
+    "test_cases": [
+        {
+            "name": "Valid Code Submission",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/submissions",
+                "body": {
+                    "code": "function calculateSum(numbers) {\n    return numbers.reduce((a, b) => a + b, 0);\n}",
+                    "filename": "sum.js"
+                }
+            },
+            "expected_response": {
+                "status": 200,
+                "body": {
+                    "_id": "string",
+                    "code": "function calculateSum(numbers) {\n    return numbers.reduce((a, b) => a + b, 0);\n}",
+                    "filename": "sum.js",
+                    "createdAt": "date"
+                }
+            }
+        },
+        {
+            "name": "Empty Code Submission",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/submissions",
+                "body": {
+                    "code": "",
+                    "filename": "empty.js"
+                }
+            },
+            "expected_response": {
+                "status": 400,
+                "body": {
+                    "message": "Code cannot be empty"
+                }
+            }
+        },
+        {
+            "name": "Missing Code Field",
+            "request": {
+                "method": "POST",
+                "url": "http://localhost:3000/api/submissions",
+                "body": {
+                    "filename": "test.js"
+                }
+            },
+            "expected_response": {
+                "status": 400,
+                "body": {
+                    "message": "Code is required"
+                }
+            }
+        }
+    ]
+},
+
+{
+    "test_cases": [
+        {
+            "name": "Get Existing Submission",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/submissions/{{valid_submission_id}}"
+            },
+            "expected_response": {
+                "status": 200,
+                "body": {
+                    "_id": "string",
+                    "code": "string",
+                    "filename": "string",
+                    "createdAt": "date"
+                }
+            }
+        },
+        {
+            "name": "Get Non-existent Submission",
+            "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/submissions/invalid_id"
+            },
+            "expected_response": {
+                "status": 404,
+                "body": {
+                    "message": "Submission not found"
+                }
+            }
+        }
+    ]
+}
+]
