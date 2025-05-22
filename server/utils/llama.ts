@@ -223,8 +223,8 @@ export const refactorCodeWithAI = async (code: string) => {
 
         const refactored = {
             original: code,
-            refactored: result.refactored || code,
-            improvements: result.improvements || []
+            refactored: result?.refactored,
+            improvements: result?.improvements || []
         };
         // Cache the result
         await redis.setex(cacheKey, CACHE_TTL.CODE_REFACTOR, JSON.stringify(refactored));
