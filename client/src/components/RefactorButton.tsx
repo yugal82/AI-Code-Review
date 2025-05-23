@@ -12,7 +12,7 @@ const RefactorButton: React.FC<RefactorButtonProps> = ({ onRefactor, loading, di
   return (
     <button
       style={{backgroundColor: theme === 'dark' ? '#1e2939' : 'white', borderColor: '#1447e6'}}
-      className={`w-[25%] font-semibold px-6 py-2 rounded border transition text-blue-700 cursor-pointer`}
+      className={`w-full md:w-[25%] font-semibold px-6 py-2 rounded border transition text-blue-700 cursor-pointer`}
       onClick={onRefactor}
       disabled={loading || disabled}
     >
