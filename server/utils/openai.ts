@@ -35,11 +35,10 @@ design patterns, and security principles. Analyze the provided code and provide 
 Format your response as a JSON object with arrays for each category. Each suggestion should be specific and actionable.
 Code to analyze:`;
 
-const CODE_REFACTOR_PROMPT = `You are an expert software engineer specializing in code refactoring and clean code principles. 
-Your task is to refactor the provided code while maintaining its functionality. Consider the following aspects:
+const CODE_REFACTOR_PROMPT = `You are an expert software engineer specializing in code refactoring and clean code principles.
+Refactor the provided code according to these aspects:
 
 1. Code Quality:
-   - Apply SOLID principles
    - Improve code organization
    - Enhance readability
    - Remove code smells
@@ -55,7 +54,15 @@ Your task is to refactor the provided code while maintaining its functionality. 
    - Reduce complexity
    - Improve resource usage
 
-Return a JSON object containing both the original and refactored code, along with a brief explanation of the key improvements made.
+**Output ONLY** a JSON object with exactly these three fields (and nothing else):
+
+{
+  "original": "<the original code as a string>",
+  "refactored": "<the refactored code as a string>",
+  "improvements": ["<first improvement>", "<second improvement>", ...]
+}
+
+Do not include any explanatory text, headings, or formatting outside of this JSON.  
 Code to refactor:`;
 
 export const analyzeCodeWithAI = async (code: string) => {
