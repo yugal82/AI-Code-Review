@@ -36,11 +36,10 @@ design patterns, and security principles. Analyze the provided code and provide 
 Format your response as a JSON object with arrays for each category. Each suggestion should be specific and actionable.
 Code to analyze:`;
 
-const CODE_REFACTOR_PROMPT = `You are an expert software engineer specializing in code refactoring and clean code principles. 
-Your task is to refactor the provided code while maintaining its functionality. Consider the following aspects:
+const CODE_REFACTOR_PROMPT = `You are an expert software engineer specializing in code refactoring and clean code principles.
+Refactor the provided code according to these aspects:
 
 1. Code Quality:
-   - Apply SOLID principles
    - Improve code organization
    - Enhance readability
    - Remove code smells
@@ -56,8 +55,17 @@ Your task is to refactor the provided code while maintaining its functionality. 
    - Reduce complexity
    - Improve resource usage
 
-Return a JSON object containing both the original and refactored code, along with the improvements made.
+**Output ONLY** a JSON object with exactly these three fields (and nothing else):
+
+{
+  "original": "<the original code as a string>",
+  "refactored": "<the refactored code as a string>",
+  "improvements": ["<first improvement>", "<second improvement>", ...]
+}
+
+Do not include any explanatory text, headings, or formatting outside of this JSON.  
 Code to refactor:`;
+
 
 // ANALYSIS LOGIC FROM HERE
 function parseAnalysisJson(input: string | null): {
@@ -132,65 +140,23 @@ export const analyzeCodeWithAI = async (code: string) => {
 
 
 // REFACTOR LOGIC FROM HERE
-function parseRefactorJson(input: string | null) {
-    let original = "";
-    let refactored = "";
-    let improvements: string[] = [];
+function parseRefactorJson(input: string | null): {
+    original: string;
+    refactored: string;
+    improvements: string[];
+} {
+    // Grab the JSON blob from the first “{” to the last “}”
+    const match = input?.match(/\{[\s\S]*\}/);
+    if (!match) {
+        throw new Error("No JSON object found in input");
+    }
+    const parsed = JSON.parse(match[0]);
 
-    // 1) Try JSON-style extraction for originalCode/refactoredCode/improvements
-    const jsonOrig = input?.match(/"originalCode"\s*:\s*"([\s\S]*?)"/);
-    const jsonRef = input?.match(/"refactoredCode"\s*:\s*"([\s\S]*?)"/);
-    const jsonImps = input?.match(/"improvements"\s*:\s*\[([\s\S]*?)\]/);
-
-    if (jsonOrig) {
-        original = jsonOrig[1].replace(/\\"/g, `"`).trim();
-    }
-    if (jsonRef) {
-        refactored = jsonRef[1].replace(/\\"/g, `"`).trim();
-    }
-    if (jsonImps) {
-        improvements = Array.from(
-            jsonImps[1].matchAll(/"([^"]+?)"/g),
-            m => m[1].trim()
-        );
-    }
-
-    // 2) Fallback to Markdown code-blocks if JSON keys weren’t found
-    if (!original) {
-        const mdOrig = input?.match(
-            /\*\*Original Code\*\*\s*```(?:[\w-]*\n)?([\s\S]*?)```/
-        );
-        original = mdOrig ? mdOrig[1].trim() : original;
-    }
-    if (!refactored) {
-        const mdRef = input?.match(
-            /\*\*Refactored Code\*\*\s*```(?:[\w-]*\n)?([\s\S]*?)```/
-        );
-        let block = mdRef ? mdRef[1].trim() : "";
-        // If the block itself is JSON, pull out the nested refactoredCode field
-        const nested = block.match(/"refactoredCode"\s*:\s*"([\s\S]*?)"/);
-        refactored = nested
-            ? nested[1].replace(/\\"/g, `"`).trim()
-            : block;
-    }
-
-    // 3) Fallback to bullet-list parsing if JSON improvements weren’t found
-    if (improvements.length === 0) {
-        // isolate the improvements section by looking for common headings
-        const impSection = input?.match(
-            /\*\*(?:Key Improvements|Improvements Made)\**:?\s*([\s\S]*?)(?=(\n\*\*|\n#{1,2}\s|\n$))/
-        );
-        const sectionText: string | null = impSection ? impSection[1] : input;
-        if (!sectionText) throw new Error("No improvements section found");
-        // grab every line that starts with a bullet
-        const bulletRe = /^\s*[*-]\s+(.+)$/gm;
-        let m;
-        while ((m = bulletRe.exec(sectionText))) {
-            improvements.push(m[1].trim());
-        }
-    }
-
-    return { original, refactored, improvements };
+    return {
+        original: parsed.original ?? "",
+        refactored: parsed.refactored ?? "",
+        improvements: Array.isArray(parsed.improvements) ? parsed.improvements : [],
+    };
 }
 
 export const refactorCodeWithAI = async (code: string) => {

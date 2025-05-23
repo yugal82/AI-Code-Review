@@ -19,7 +19,6 @@ export const generateRefactor = async (req: Request, res: Response) => {
 
         // Generate refactored code using AI
         const result = await aiFactory.refactorCode(submission.code);
-        console.log("Result in Refactor Controller: ", result);
         // Create and save refactor
         refactor = new Refactor({
             submissionId: submission._id,
