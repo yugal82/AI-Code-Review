@@ -32,7 +32,15 @@ design patterns, and security principles. Analyze the provided code and provide 
    - Authentication/Authorization
    - Common vulnerabilities
 
-Format your response as a JSON object with arrays for each category. Each suggestion should be specific and actionable.
+**Output ONLY** a JSON object with exactly these three fields (and nothing else):
+
+{
+  "style": ["<first improvement suggestion for style>", "<second improvement suggestion for style>", ...],
+  "performance": ["<first improvement suggestion for preformance>", "<second improvement suggestion for preformance>", ...],
+  "security": ["<first improvement suggestion for security>", "<second improvement suggestion for security>", ...]
+}
+
+Do not include any explanatory text, headings, or formatting outside of this JSON.
 Code to analyze:`;
 
 const CODE_REFACTOR_PROMPT = `You are an expert software engineer specializing in code refactoring and clean code principles.
@@ -76,8 +84,9 @@ export const analyzeCodeWithAI = async (code: string) => {
             return JSON.parse(cachedResult);
         }
 
+        // model: "gpt-4-0125-preview", // Latest GPT-4 model optimized for code
         const response = await openai.chat.completions.create({
-            model: "gpt-4-0125-preview", // Latest GPT-4 model optimized for code
+            model: "gpt-4.1-mini-2025-04-14", // Latest GPT-4 model optimized for code
             messages: [
                 {
                     role: "system",
@@ -89,15 +98,16 @@ export const analyzeCodeWithAI = async (code: string) => {
                 }
             ],
             response_format: { type: "json_object" },
-            temperature: 0.3, // Lower temperature for more consistent results
+            temperature: 0.7, // Lower temperature for more consistent results
             max_tokens: 2000
         });
 
         const analysis = JSON.parse(response.choices[0].message.content || '{}');
+
         const result = {
-            style: analysis.style || [],
-            performance: analysis.performance || [],
-            security: analysis.security || []
+            style: analysis.style,
+            performance: analysis.performance,
+            security: analysis.security
         };
 
         // Cache the result
@@ -122,7 +132,7 @@ export const refactorCodeWithAI = async (code: string) => {
         }
 
         const response = await openai.chat.completions.create({
-            model: "gpt-4-0125-preview", // Latest GPT-4 model optimized for code
+            model: "gpt-4.1-mini-2025-04-14", // Latest GPT-4 model optimized for code
             messages: [
                 {
                     role: "system",
@@ -134,15 +144,15 @@ export const refactorCodeWithAI = async (code: string) => {
                 }
             ],
             response_format: { type: "json_object" },
-            temperature: 0.2, // Lower temperature for more consistent results
+            temperature: 0.7, // Lower temperature for more consistent results
             max_tokens: 4000
         });
 
         const result = JSON.parse(response.choices[0].message.content || '{}');
         const refactored = {
             original: code,
-            refactored: result.refactored || code,
-            improvements: result.improvements || []
+            refactored: result.refactored,
+            improvements: result.improvements
         };
 
         // Cache the result

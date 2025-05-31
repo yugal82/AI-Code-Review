@@ -26,6 +26,16 @@ const SubmissionForm: React.FC = () => {
     setFilename(file.filename);
   };
 
+  const handleModelChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedModel = e.target.value;
+    setModel(selectedModel);
+    try {
+      await axios.post(`${API_BASE}/set-model`, { model: selectedModel });
+    } catch (err) {
+      console.error('Error setting model:', err);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -34,7 +44,6 @@ const SubmissionForm: React.FC = () => {
       const res = await axios.post(`${API_BASE}/submissions`, {
         code,
         filename,
-        model,
       });
       const id = res.data?.data?.id;
       if (id) {
@@ -55,12 +64,12 @@ const SubmissionForm: React.FC = () => {
       onSubmit={handleSubmit}
     >
       <div className="flex items-center gap-1 w-full">
-        <label htmlFor="llm-model" className={`text-lg mb-1 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>Model</label>
+        <label htmlFor="llm-model" className={`text-lg mb-1 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>Choose your model</label>
         <select
           id="llm-model"
           value={model}
-          onChange={e => setModel(e.target.value)}
-          className={`rounded px-3 py-2 border outline-none transition ${
+          onChange={handleModelChange}
+          className={`rounded p-1 border outline-none transition ${
             theme === 'dark'
               ? 'bg-gray-900 border-gray-700 text-gray-100 focus:border-blue-500'
               : 'bg-white border-gray-300 text-gray-900 focus:border-blue-600'
@@ -71,6 +80,7 @@ const SubmissionForm: React.FC = () => {
           ))}
         </select>
       </div>
+      <p className="block text-md text-gray-800">The selected model is: {MODEL_OPTIONS.find(opt => opt.value === model)?.label}</p>
       <FileUploader onFileRead={handleFileRead} />
       <EditorContainer value={code} onChange={setCode} />
       <button

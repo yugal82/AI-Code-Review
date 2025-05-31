@@ -11,6 +11,7 @@ import { apiRateLimiter } from './middleware/rateLimiter';
 import submissionRoutes from './routes/submissions';
 import reviewRoutes from './routes/review';
 import refactorRoutes from './routes/refactor';
+import setModelRoutes from './routes/setModel';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,6 +32,7 @@ app.get('/', async (req, res) => {
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/review', reviewRoutes);
 app.use('/api/refactor', refactorRoutes);
+app.use('/api/set-model', setModelRoutes);
 
 // Error handling
 app.use(errorHandler);

@@ -12,10 +12,11 @@ export const generateReview = async (req: Request, res: Response) => {
         }
 
         // Check if review already exists
-        let review = await Review.findOne({ submissionId: submission._id });
-        if (review) {
-            return res.json(review);
-        }
+        let review;
+        // let review = await Review.findOne({ submissionId: submission._id });
+        // if (review) {
+        //     return res.json(review);
+        // }
 
         // Generate review using AI
         const analysis = await aiFactory.analyzeCode(submission.code);
